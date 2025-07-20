@@ -1,16 +1,21 @@
-from pytube import YouTube
-from pytube.cli import on_progress
+import yt_dlp
 
-def Download(link):
-    youtubeObject = YouTube(link,on_progress_callback=on_progress)
-    youtubeObject = youtubeObject.streams.get_highest_resolution()
+def baixar_live_com_audio_e_video(url, caminho_arquivo="live.mp4"):
+    opcoes = {
+        "outtmpl": caminho_arquivo,  # Nome do arquivo de saída
+        "format": "bestvideo+bestaudio/best",  # Combina vídeo e áudio
+        "merge_output_format": "mp4",  # Formato final
+    }
+
     try:
-        youtubeObject.download('videos/')
-    except:
-        print("Ocorreu um erro")
+        with yt_dlp.YoutubeDL(opcoes) as ydl:
+            ydl.download([url])
+        print(f"Download concluído: {caminho_arquivo}")
+    except Exception as e:
+        print(f"Erro ao baixar a live: {e}")
 
-    print("Download concluído")
+# URL da live do YouTube
+url_da_live = "https://youtu.be/LBpeLo7a4H4"
+baixar_live_com_audio_e_video(url_da_live)
 
-
-link = input("Insira um URL de vídeo do YouTube: ")
-Download(link)
+#
